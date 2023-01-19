@@ -1,13 +1,27 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import confetti from 'canvas-confetti'
 
 import Square from './components/Square.vue'
 import WinnerModal from './components/WinnerModal.vue'
 import { TURNS } from './utils/constants'
 import { checkWinnerFrom, checkEndGame } from './logic/board'
+import { saveGameToStorage, resetGameStorage } from './logic/storage'
 
-const board = ref(Array(9).fill(null))
+const shallowBoard = ref(Array(9).fill(null))
+const board = computed({
+  get() {
+    const boardFromStorage = window.localStorage.getItem('board')
+    if (boardFromStorage) {
+      shallowBoard.value = JSON.parse(boardFromStorage)
+    }
+    return shallowBoard.value
+  },
+  set(val) {
+    shallowBoard.value = val
+  }
+})
+
 const turn = ref(TURNS.X)
 const winner = ref(false)
 const gameOver = ref(false)
@@ -17,6 +31,8 @@ const resetGame = () => {
   turn.value = TURNS.X
   winner.value = false
   gameOver.value = false
+
+  resetGameStorage()
   // console.log("Reiniciando...");
 }
 
@@ -36,6 +52,10 @@ const updateBoard = (index) => {
   // turn.value = newTurn
 
   //Guardar la partida
+  saveGameToStorage({
+    board: board.value,
+    turn: turn.value
+  })
 
   //Revisar si hay ganador
   const newWinner = checkWinnerFrom(board.value)
@@ -66,8 +86,8 @@ const updateBoard = (index) => {
     <section class="turn">
       <Square :isSelected="turn === TURNS.X">{{ TURNS.X }}</Square>
       <Square :isSelected="turn === TURNS.O">{{ TURNS.O }}</Square>
-      </section>
-      <WinnerModal :resetGame="resetGame" :winner="winner" v-show="gameOver" />
+    </section>
+    <WinnerModal :resetGame="resetGame" :winner="winner" v-show="gameOver" />
 
   </main>
 </template>

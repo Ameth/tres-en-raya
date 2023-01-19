@@ -14,14 +14,10 @@ const winnerText = ref('')
 //     { deep: true }
 // )
 
-// watchEffect(() => {
-//     console.log("winner", props.winner)
-// })
-
-
-// console.log("winner", props.winner)
-
-winnerText.value = props.winner === false ? "Empate" : "Ganó:"
+watchEffect(() => {
+    // console.log("winner", props.winner)
+    winnerText.value = (props.winner === false) ? "Empate" : "Ganó:"
+})
 
 </script>
 
