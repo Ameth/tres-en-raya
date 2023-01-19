@@ -9,11 +9,11 @@ export const checkWinnerFrom = (boardToCheck) => {
       boardToCheck[a] === boardToCheck[b] &&
       boardToCheck[a] === boardToCheck[c]
     ) {
-      return boardToCheck[a]
+      return boardToCheck[a] // Esto retornara ❌ u ⚪
     }
   }
   //Si no hay ganador
-  return null
+  return false
 }
 
 export const checkEndGame = (newBoard) => {
