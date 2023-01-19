@@ -22,7 +22,7 @@ const board = computed({
   }
 })
 
-const turn = ref(TURNS.X)
+const turn = ref(window.localStorage.getItem('turn') ?? TURNS.X)
 const winner = ref(false)
 const gameOver = ref(false)
 
